@@ -1,6 +1,10 @@
 using BlazingPizza.Data;
 using BlazingPizza.Services;
+using System.Globalization;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 
 builder.Services.AddRazorPages();
@@ -9,6 +13,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddSqlite<PizzaStoreContext>("Data Source=pizza.db");
 builder.Services.AddScoped<OrderState>();
 
+var culture = new CultureInfo("en-PH");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 
 
