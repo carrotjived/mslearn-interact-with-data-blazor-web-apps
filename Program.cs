@@ -1,15 +1,29 @@
 using BlazingPizza.Data;
 using BlazingPizza.Services;
 using System.Globalization;
+using Microsoft.AspNetCore.Components;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 
 
+
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<HttpClient>(sp =>
+{
+    var navigationManager = sp.GetRequiredService<NavigationManager>();
+    return new HttpClient
+    {
+        BaseAddress = new Uri(navigationManager.BaseUri)
+    };
+});
+
 builder.Services.AddSqlite<PizzaStoreContext>("Data Source=pizza.db");
 builder.Services.AddScoped<OrderState>();
 
@@ -21,12 +35,12 @@ CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Error");
+// }
 
-
+app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
 app.UseRouting();
 
